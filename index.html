@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+</head>
+
+
+
+
+<body>
+    <div id="app">
+        <input type="text" v-model="input" v-on:keyup="enterPress">
+        <div>{{input|something}}</div>
+    </div>
+
+    <script src="js/jquery.min.js" type="text/javascript"></script>
+    <script src="js/vue.min.js" type="text/javascript"></script>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                input: ""
+            },
+            methods: {
+                enterPress: function() {
+                    if (event.keyCode === 13) {
+                        console.log("ok")
+                    }
+                }
+            },
+            filters: {
+                something: function(value) {
+                    if (isNaN(parseInt(value))) {
+                        return "请输入正确的日期!"
+                    }
+                    var year, month, day;
+                    switch (value.length) {
+                        case 6:
+                            if (value.slice(5, 6) != 0) {
+                                year = value.slice(0, 4) + "年";
+                                month = value.slice(4, 5) + "月";
+                                day = value.slice(5, 6) + "日";
+                                return year + month + day
+                            }
+                            break;
+                        case 7:
+                            year = value.slice(0, 4) + "年";
+                            var testMonth = parseInt(value.slice(4, 5))
+                            var testDay = parseInt(value.slice(6, 7))
+
+                            if (testMonth == 1) {
+                                //两种可能
+                                //1.1月
+                                //2.10，11，12月
+
+                                //*10月
+                                if (value.slice(-2, -1) == 0) {
+                                    month = value.slice(4, 6) + "月";
+                                    day = value.slice(6, 7) + "日";
+
+                                } else {
+                                    //*11月，12月
+                                    month = value.slice(4, 5) + "月";
+                                    day = value.slice(5, 7) + "日";
+                                    var month2 = value.slice(4, 6) + "月";
+                                    var day2 = value.slice(6, 7) + "日";
+                                    return "按Q选择" + year + month + day + "," + "按W选择" + year + month2 + day2
+                                }
+                            } else {
+                                month = value.slice(4, 5) + "月";
+                                day = value.slice(5, 7) + "日";
+                                var testDay = parseInt(value.slice(5, 7))
+                                if (testDay <= 31 && testDay > 0) {
+                                    day = value.slice(5, 7) + "日";
+                                } else {
+                                    return "请输入正确的日期!"
+                                }
+                            }
+                            return year + month + day
+                            break;
+                        case 8:
+                            year = value.slice(0, 4) + "年";
+                            var testMonth = parseInt(value.slice(4, 6))
+                            var testDay = parseInt(value.slice(6, 8))
+
+                            if (testMonth <= 12 && testMonth > 0) {
+                                month = value.slice(4, 6) + "月";
+                                if (testDay <= 31 && testDay > 0) {
+                                    day = value.slice(6, 8) + "日";
+                                } else {
+                                    return "请输入正确的日期!"
+                                }
+                                return year + month + day
+                            } else {
+                                return "请输入正确的日期!"
+                            }
+                            break;
+                    }
+                }
+            },
+            computed: {
+                formatDate: function() {
+
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
